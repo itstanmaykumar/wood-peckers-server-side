@@ -69,6 +69,15 @@ async function run() {
             const users = await cursor.toArray();
             res.send(users);
         });
+        // creating new users
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const newUser = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(newUser);
+        });
     }
     finally {
         // await client.close();
