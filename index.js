@@ -58,6 +58,13 @@ async function run() {
             const products = await cursor.toArray();
             res.send(products);
         });
+        // getting single product by id
+        app.get("/products/:productId", async (req, res) => {
+            const id = req.params.productId;
+            const query = { _id: ObjectId(id) };
+            const singleProduct = await productsCollection.findOne(query);
+            res.send(singleProduct);
+        });
         // getting all products
         app.get('/reviews', async (req, res) => {
             const cursor = reviewsCollection.find({});
@@ -96,9 +103,9 @@ async function run() {
 
         //adding new order
         app.post("/orders", async (req, res) => {
-            const currentProduct = req.body;
-            const product = await ordersCollection.insertOne(currentProduct);
-            res.json(product);
+            const newOrder = req.body;
+            const orders = await ordersCollection.insertOne(newOrder);
+            res.json(orders);
         });
     }
     finally {
