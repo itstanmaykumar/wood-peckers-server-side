@@ -107,6 +107,12 @@ async function run() {
             const orders = await ordersCollection.insertOne(newOrder);
             res.json(orders);
         });
+        // getting all orders
+        app.get('/orders', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const orders = await cursor.toArray();
+            res.send(orders);
+        });
     }
     finally {
         // await client.close();
