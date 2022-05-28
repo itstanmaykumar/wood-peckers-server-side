@@ -69,6 +69,14 @@ async function run() {
             const users = await cursor.toArray();
             res.send(users);
         });
+        // getting single user
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            //const isAdmin = user?.role ? true : false;
+            res.json(user);
+        });
         // creating new users
         app.put('/users', async (req, res) => {
             const user = req.body;
