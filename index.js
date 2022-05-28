@@ -73,6 +73,7 @@ async function run() {
         app.get("/users/:email", verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
             const email = req.params.email;
+            console.log(email, decodedEmail);
             if (email === decodedEmail) {
                 const query = { email: email };
                 const user = await usersCollection.findOne(query);
