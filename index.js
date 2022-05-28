@@ -42,6 +42,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const reviewsCollection = database.collection('reviews');
         const usersCollection = database.collection('users');
+        const ordersCollection = database.collection('orders');
 
         //using jwt token to verify user
         app.post('/signin', async (req, res) => {
@@ -63,7 +64,7 @@ async function run() {
             const reviews = await cursor.toArray();
             res.send(reviews);
         });
-        // getting all products
+        // getting all users
         app.get('/users', async (req, res) => {
             const cursor = usersCollection.find({});
             const users = await cursor.toArray();
@@ -91,6 +92,13 @@ async function run() {
             const updateDoc = { $set: user };
             const newUser = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(newUser);
+        });
+
+        //adding new order
+        app.post("/orders", async (req, res) => {
+            const currentProduct = req.body;
+            const product = await ordersCollection.insertOne(currentProduct);
+            res.json(product);
         });
     }
     finally {
