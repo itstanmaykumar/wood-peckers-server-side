@@ -70,12 +70,17 @@ async function run() {
             res.send(users);
         });
         // getting single user
-        app.get("/users/:email", async (req, res) => {
+        app.get("/users/:email", verifyJWT, async (req, res) => {
+            const decodedEmail = req.decoded.email;
             const email = req.params.email;
-            const query = { email: email };
-            const user = await usersCollection.findOne(query);
-            //const isAdmin = user?.role ? true : false;
-            res.json(user);
+            if (email === decodedEmail) {
+                const query = { email: email };
+                const user = await usersCollection.findOne(query);
+                //const isAdmin = user?.role ? true : false;
+                res.json(user);
+            } else {
+                res.status(403).send({ message: 'Forbidden Access' })
+            }
         });
         // creating new users
         app.put('/users', async (req, res) => {
