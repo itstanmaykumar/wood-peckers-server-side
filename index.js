@@ -41,6 +41,7 @@ async function run() {
         const database = client.db('woodpeckersDB');
         const productsCollection = database.collection('products');
         const reviewsCollection = database.collection('reviews');
+        const usersCollection = database.collection('users');
 
         //using jwt token to verify user
         app.post('/signin', async (req, res) => {
@@ -61,6 +62,12 @@ async function run() {
             const cursor = reviewsCollection.find({});
             const reviews = await cursor.toArray();
             res.send(reviews);
+        });
+        // getting all products
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const users = await cursor.toArray();
+            res.send(users);
         });
     }
     finally {
