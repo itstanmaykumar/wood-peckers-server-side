@@ -45,7 +45,7 @@ async function run() {
         //using jwt token to verify user
         app.post('/signin', async (req, res) => {
             const user = req.body;
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+            const accessToken = jwt.sign(user, process.env.SECRET_KEY);
             res.send({ accessToken });
         });
 
