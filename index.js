@@ -113,6 +113,20 @@ async function run() {
             const orders = await cursor.toArray();
             res.send(orders);
         });
+        //getting my orders by jwt
+        app.get('/myorders', verifyJWT, async (req, res) => {
+            const decodedEmail = req.decoded.email;
+            const email = req.query.user;
+            if (email === decodedEmail) {
+                const query = { email: email };
+                const cursor = ordersCollection.find(query);
+                const orders = await cursor.toArray();
+                res.send(orders);
+            }
+            else {
+                res.status(403).send({ message: 'forbidden access' })
+            }
+        });
     }
     finally {
         // await client.close();
