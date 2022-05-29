@@ -65,6 +65,15 @@ async function run() {
             const singleProduct = await productsCollection.findOne(query);
             res.send(singleProduct);
         });
+        // adding or updating a product
+        app.put('/products', async (req, res) => {
+            const product = req.body;
+            const filter = { _id: ObjectId(product.id) };
+            const options = { upsert: true };
+            const updateDoc = { $set: product };
+            const newProducts = await productsCollection.updateOne(filter, updateDoc, options);
+            res.json(newProducts);
+        });
         // getting all products
         app.get('/reviews', async (req, res) => {
             const cursor = reviewsCollection.find({});
@@ -72,11 +81,17 @@ async function run() {
             res.send(reviews);
         });
         //adding new review
-        app.post("/reviews", async (req, res) => {
+        app.post("/reviews", verifyJWT, async (req, res) => {
             const newReview = req.body;
-            console.log(newReview.email);
-            const reviews = await reviewsCollection.insertOne(newReview);
-            res.json(reviews);
+            const decodedEmail = req.decoded.email;
+            const email = newReview.email;
+            //console.log(email, decodedEmail);
+            if (email === decodedEmail) {
+                const reviews = await reviewsCollection.insertOne(newReview);
+                res.json(reviews);
+            } else {
+                res.status(403).send({ message: 'Forbidden Access' })
+            }
         });
         // getting all users
         app.get('/users', async (req, res) => {
