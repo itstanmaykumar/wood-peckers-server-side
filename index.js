@@ -81,7 +81,7 @@ async function run() {
         app.get("/users/:email", verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
             const email = req.params.email;
-            console.log(email, decodedEmail);
+            //console.log(email, decodedEmail);
             if (email === decodedEmail) {
                 const query = { email: email };
                 const user = await usersCollection.findOne(query);
@@ -127,13 +127,7 @@ async function run() {
                 res.status(403).send({ message: 'Forbidden Access.' })
             }
         });
-        //deleting an order
-        app.delete('/orders/:orderId', async (req, res) => {
-            const id = req.params.orderId;
-            const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.deleteOne(query);
-            res.send(result);
-        });
+
     }
     finally {
         // await client.close();
