@@ -128,10 +128,10 @@ async function run() {
             }
         });
         //deleting an order
-        app.get('/orders/:orderId', async (req, res) => {
+        app.delete('/orders/:orderId', async (req, res) => {
             const id = req.params.orderId;
             const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.findOne(query);
+            const result = await ordersCollection.deleteOne(query);
             res.send(result);
         });
     }
