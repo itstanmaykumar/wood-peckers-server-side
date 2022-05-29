@@ -127,7 +127,13 @@ async function run() {
                 res.status(403).send({ message: 'Forbidden Access.' })
             }
         });
-
+        //deleting an order
+        app.get('/orders/:orderId', async (req, res) => {
+            const id = req.params.orderId;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.findOne(query);
+            res.send(result);
+        });
     }
     finally {
         // await client.close();
