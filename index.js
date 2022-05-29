@@ -44,6 +44,17 @@ async function run() {
         const usersCollection = database.collection('users');
         const ordersCollection = database.collection('orders');
 
+        const verifyAdmin = async (req, res, next) => {
+            const requester = req.decoded.email;
+            const requesterAccount = await usersCollection.findOne({ email: requester });
+            if (requesterAccount.role === 'admin') {
+                next();
+            }
+            else {
+                res.status(403).send({ message: 'Forbidden' });
+            }
+        }
+
         //using jwt token to verify user
         app.post('/signin', async (req, res) => {
             const user = req.body;
@@ -122,6 +133,13 @@ async function run() {
             const newUser = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(newUser);
         });
+
+        app.get('/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await usersCollection.findOne({ email: email });
+            const isAdmin = user.role === 'admin';
+            res.send({ admin: isAdmin })
+        })
 
         //adding new order
         app.post("/orders", async (req, res) => {
