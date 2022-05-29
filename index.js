@@ -86,7 +86,8 @@ async function run() {
             res.json(newProducts);
         });
         //deleting an product
-        app.delete('/products/productId', async (req, res) => {
+        app.delete('/products/:productId', verifyJWT, async (req, res) => {
+            console.log("hitt");
             const id = req.params.productId;
             const query = { _id: ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
