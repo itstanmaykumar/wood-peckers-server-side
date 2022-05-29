@@ -77,7 +77,7 @@ async function run() {
             res.send(singleProduct);
         });
         //new products
-        app.post("/products", async (req, res) => {
+        app.post("/products", verifyJWT, async (req, res) => {
             const newProduct = req.body;
             const products = await productsCollection.insertOne(newProduct);
             res.json(products);
