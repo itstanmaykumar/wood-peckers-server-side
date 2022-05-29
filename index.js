@@ -85,6 +85,9 @@ async function run() {
             const newProducts = await productsCollection.updateOne(filter, updateDoc, options);
             res.json(newProducts);
         });
+
+
+
         // getting all products
         app.get('/reviews', async (req, res) => {
             const cursor = reviewsCollection.find({});
@@ -104,6 +107,11 @@ async function run() {
                 res.status(403).send({ message: 'Forbidden Access' })
             }
         });
+
+
+
+
+
         // getting all users
         app.get('/users', async (req, res) => {
             const cursor = usersCollection.find({});
@@ -134,12 +142,16 @@ async function run() {
             res.json(newUser);
         });
 
+
+
         app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
             const user = await usersCollection.findOne({ email: email });
             const isAdmin = user.role === true;
             res.send({ admin: isAdmin })
         })
+
+
 
         //adding new order
         app.post("/orders", async (req, res) => {
@@ -166,6 +178,15 @@ async function run() {
             else {
                 res.status(403).send({ message: 'Forbidden Access.' })
             }
+        });
+        // updating an order
+        app.put('/orders', verifyJWT, async (req, res) => {
+            const order = req.body;
+            const filter = { _id: ObjectId(order.id) };
+            const options = { upsert: true };
+            const updateDoc = { $set: order };
+            const newOrders = await ordersCollection.updateOne(filter, updateDoc, options);
+            res.json(newOrders);
         });
         //deleting an order
         app.delete('/orders/:orderId', async (req, res) => {
