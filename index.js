@@ -124,8 +124,15 @@ async function run() {
                 res.send(orders);
             }
             else {
-                res.status(403).send({ message: 'forbidden access' })
+                res.status(403).send({ message: 'Forbidden Access.' })
             }
+        });
+        //deleting an order
+        app.delete('/orders/:orderId', async (req, res) => {
+            const id = req.params.orderId;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            res.send(result);
         });
     }
     finally {
