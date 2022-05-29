@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
+
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const jwt = require("jsonwebtoken");
-
-require('dotenv').config();
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -93,7 +93,7 @@ async function run() {
         });
         //deleting an product
         app.delete('/products/:productId', verifyJWT, async (req, res) => {
-            console.log("hitt");
+            console.log(req);
             const id = req.params.productId;
             const query = { _id: ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
