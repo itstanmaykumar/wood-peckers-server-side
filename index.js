@@ -177,13 +177,6 @@ async function run() {
             const orders = await cursor.toArray();
             res.send(orders);
         });
-        //getting a single order
-        app.get('/orders/:orderId', async (req, res) => {
-            const id = req.params.orderId;
-            const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.findOne(query);
-            res.send(result);
-        });
         //getting my orders by jwt
         app.get('/myorders', verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
