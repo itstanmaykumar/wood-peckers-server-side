@@ -24,6 +24,8 @@ woodpeckers is  is an American multinational technology company which focuses on
 * Mongodb
 * Stripe
 * JWT
+* React Query
+* React Hook Form
 * Axios
 * React Router
 * React Hooks
