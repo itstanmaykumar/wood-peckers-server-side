@@ -156,7 +156,6 @@ async function run() {
         });
 
 
-
         app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
             const user = await usersCollection.findOne({ email: email });
@@ -173,7 +172,7 @@ async function run() {
             res.json(orders);
         });
         // getting all orders
-        app.get('/orders', verifyJWT, verifyAdmin, async (req, res) => {
+        app.get('/orders', verifyJWT, async (req, res) => {
             const cursor = ordersCollection.find({});
             const orders = await cursor.toArray();
             res.send(orders);
