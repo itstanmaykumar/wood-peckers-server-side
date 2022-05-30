@@ -47,7 +47,7 @@ async function run() {
         const verifyAdmin = async (req, res, next) => {
             const requester = req.decoded.email;
             const requesterAccount = await usersCollection.findOne({ email: requester });
-            if (requesterAccount.role === 'admin') {
+            if (requesterAccount.role === true) {
                 next();
             }
             else {
@@ -77,13 +77,13 @@ async function run() {
             res.send(singleProduct);
         });
         //new products
-        app.post("/products", verifyJWT, async (req, res) => {
+        app.post("/products", verifyJWT, verifyAdmin, async (req, res) => {
             const newProduct = req.body;
             const products = await productsCollection.insertOne(newProduct);
             res.json(products);
         });
         // adding or updating a product
-        app.put('/products', async (req, res) => {
+        app.put('/products', verifyJWT, async (req, res) => {
             const product = req.body;
             const filter = { _id: ObjectId(product.id) };
             const options = { upsert: true };
@@ -92,8 +92,7 @@ async function run() {
             res.json(newProducts);
         });
         //deleting an product
-        app.delete('/products/:productId', verifyJWT, async (req, res) => {
-            console.log(req);
+        app.delete('/products/:productId', verifyJWT, verifyAdmin, async (req, res) => {
             const id = req.params.productId;
             const query = { _id: ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
@@ -158,7 +157,7 @@ async function run() {
 
 
 
-        app.get('/admin/:email', async (req, res) => {
+        app.get('/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const user = await usersCollection.findOne({ email: email });
             const isAdmin = user.role === true;
@@ -168,16 +167,23 @@ async function run() {
 
 
         //adding new order
-        app.post("/orders", async (req, res) => {
+        app.post("/orders", verifyJWT, async (req, res) => {
             const newOrder = req.body;
             const orders = await ordersCollection.insertOne(newOrder);
             res.json(orders);
         });
         // getting all orders
-        app.get('/orders', async (req, res) => {
+        app.get('/orders', verifyJWT, verifyAdmin, async (req, res) => {
             const cursor = ordersCollection.find({});
             const orders = await cursor.toArray();
             res.send(orders);
+        });
+        //getting a single order
+        app.get('/orders/:orderId', verifyJWT, async (req, res) => {
+            const id = req.params.orderId;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.fineOne(query);
+            res.send(result);
         });
         //getting my orders by jwt
         app.get('/myorders', verifyJWT, async (req, res) => {
@@ -203,7 +209,7 @@ async function run() {
             res.json(newOrders);
         });
         //deleting an order
-        app.delete('/orders/:orderId', async (req, res) => {
+        app.delete('/orders/:orderId', verifyJWT, async (req, res) => {
             const id = req.params.orderId;
             const query = { _id: ObjectId(id) };
             const result = await ordersCollection.deleteOne(query);
@@ -218,7 +224,7 @@ async function run() {
 
 run().catch(console.dir);
 
-app.get('/', (req, res) => {
+app.get('/', verifyJWT, (req, res) => {
     res.send("Welcome to Woodpecker Database!");
 })
 
