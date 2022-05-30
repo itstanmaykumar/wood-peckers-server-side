@@ -166,7 +166,7 @@ async function run() {
 
 
         //adding new order
-        app.post("/orders", verifyJWT, async (req, res) => {
+        app.post("/orders", async (req, res) => {
             const newOrder = req.body;
             const orders = await ordersCollection.insertOne(newOrder);
             res.json(orders);
