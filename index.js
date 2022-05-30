@@ -178,7 +178,7 @@ async function run() {
             res.send(orders);
         });
         //getting a single order
-        app.get('/orders/:orderId', verifyJWT, async (req, res) => {
+        app.get('/orders/:orderId', async (req, res) => {
             const id = req.params.orderId;
             const query = { _id: ObjectId(id) };
             const result = await ordersCollection.fineOne(query);
