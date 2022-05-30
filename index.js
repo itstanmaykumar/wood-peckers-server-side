@@ -181,7 +181,7 @@ async function run() {
         app.get('/orders/:orderId', async (req, res) => {
             const id = req.params.orderId;
             const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.fineOne(query);
+            const result = await ordersCollection.findOne(query);
             res.send(result);
         });
         //getting my orders by jwt
